@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de EPIs</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+
+<body>
+    <h1>Retirar de EPIs</h1>
+    <div class="container-form">
+        <form id="retirarEPIForm" method="POST">
+            <div class="container-input">
+                <input type="number" name="id_colaborador" placeholder="ID do Colaborador">
+                <input type="number" name="id_epi" placeholder="ID do EPI">
+                <div class="flex cadastro-colaborador">
+                    <button class="botao-cadastro-edicao border-none" type="submit">RETIRAR EPI</button>
+                </div>
+            </div>
+    </div>
+    </form>
+    <h1>Devolver EPIs</h1>
+    <div class="container-form">
+        <form id="devolverEPIForm" method="POST">
+            <div class="container-input">
+                <input type="number" name="id_colaborador" placeholder="ID do Colaborador">
+                <input type="number" name="id_epi" placeholder="ID do EPI">
+                <div class="flex cadastro-colaborador">
+                    <button class="botao-cadastro-edicao border-none" type="submit">DEVOLVER EPI</button>
+                </div>
+                <div class="flex cadastro-colaborador">
+                    <button class="btn-excluir border-none" id="listarTransacoesBtn">Listar Transações</button>
+                </div>
+            </div>
+    </div>
+    </form>
+  
+
+    <div id="resultado"></div>
+
+    <script>
+
+        function listarTransacoes() {
+            fetch('/transacoes/listar')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao obter as transações. Código de status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const transacoes = data.transacoes;
+                    const resultadoDiv = document.getElementById('resultado');
+                    resultadoDiv.innerHTML = '<h2>Transações de EPIs</h2>'; // Limpa o conteúdo anterior
+                    if (transacoes.length === 0) {
+                        resultadoDiv.innerHTML += '<p>Nenhuma transação registrada.</p>';
+                    } else {
+                        transacoes.forEach(transacao => {
+                            // Verifica se transacao.tipo_transacao não é null antes de chamar toUpperCase
+                            const tipoTransacao = transacao.tipo_transacao ? transacao.tipo_transacao.toUpperCase() : '';
+                            // Adiciona classe com base no tipo de transação
+                            const classeTransacao = transacao.tipo_transacao === 'retirada' ? 'retirada' : 'devolucao';
+                            // Exibe informações da transação, EPI e colaborador
+                            resultadoDiv.innerHTML += `<p>ID: ${transacao.id}, Tipo: <span class="${classeTransacao}">${tipoTransacao}</span>, EPI: ${transacao.nome_epi}, Colaborador: ${transacao.nome_colaborador}, Cargo: ${transacao.cargo_colaborador}, Data: ${transacao.data_transacao}</p>`;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao listar transações:', error);
+                    const resultadoDiv = document.getElementById('resultado');
+                    resultadoDiv.innerHTML = '<p>Ocorreu um erro ao listar as transações.</p>';
+                });
+        }
+
+
+        // Função para enviar requisição AJAX e registrar a retirada de EPI
+        function registrarRetirada(event) {
+            event.preventDefault(); // Impede o envio do formulário
+            const formData = new FormData(event.target); // Obtém os dados do formulário
+            const jsonData = {};
+            formData.forEach((value, key) => { // Convertendo FormData para objeto JSON
+                jsonData[key] = value;
+            });
+            fetch('/transacoes/retirada', { // Envia uma requisição POST para a rota '/retirada'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Definindo o tipo de conteúdo como JSON
+                },
+                body: JSON.stringify(jsonData) // Convertendo o objeto JSON em string JSON
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.status); // Exibe mensagem de sucesso ou erro
+                    event.target.reset(); // Limpa os campos do formulário
+                })
+                .catch(error => {
+                    console.error('Erro ao registrar retirada:', error);
+                    alert('Erro ao registrar retirada. Por favor, tente novamente.');
+                });
+        }
+
+        // Função para enviar requisição AJAX e registrar a devolução de EPI
+        function registrarDevolucao(event) {
+            event.preventDefault(); // Impede o envio do formulário
+            const formData = new FormData(event.target); // Obtém os dados do formulário
+            const jsonData = {};
+            formData.forEach((value, key) => { // Convertendo FormData para objeto JSON
+                jsonData[key] = value;
+            });
+            fetch('/transacoes/devolucao', { // Envia uma requisição POST para a rota '/devolucao'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Definindo o tipo de conteúdo como JSON
+                },
+                body: JSON.stringify(jsonData) // Convertendo o objeto JSON em string JSON
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.status); // Exibe mensagem de sucesso ou erro
+                    event.target.reset(); // Limpa os campos do formulário
+                })
+                .catch(error => {
+                    console.error('Erro ao registrar devolução:', error);
+                    alert('Erro ao registrar devolução. Por favor, tente novamente.');
+                });
+        }
+
+        // Adiciona um evento de clique ao botão de listar transações
+        document.getElementById('listarTransacoesBtn').addEventListener('click', listarTransacoes);
+
+        // Adiciona um evento de envio ao formulário de retirada de EPI
+        document.getElementById('retirarEPIForm').addEventListener('submit', registrarRetirada);
+
+        // Adiciona um evento de envio ao formulário de devolução de EPI
+        document.getElementById('devolverEPIForm').addEventListener('submit', registrarDevolucao);
+    </script>
+</body>
+
+</html>

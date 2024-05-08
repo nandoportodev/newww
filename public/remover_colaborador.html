@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remover Colaborador</title>
+</head>
+
+<body>
+    <h1>Remover Colaborador</h1>
+    <form id="removerColaboradorForm" method="POST">
+        <input type="number" name="id" placeholder="ID do Colaborador a ser removido">
+        <button type="submit">Remover Colaborador</button>
+    </form>
+    <div id="resultado"></div>
+    <script>
+        // Função para enviar requisição AJAX e remover colaborador
+        document.getElementById('removerColaboradorForm').addEventListener('submit', event => {
+            event.preventDefault(); // Impede o envio do formulário
+            const formData = new FormData(event.target); // Obtém os dados do formulário
+            const id = formData.get('id');
+            fetch(`/colaboradores/${id}`, { // Alteração do destino da requisição para '/colaboradores/:id'
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.status); // Exibe mensagem de sucesso ou erro
+                    event.target.reset(); // Limpa os campos do formulário
+                })
+                .catch(error => {
+                    console.error('Erro ao remover colaborador:', error);
+                    alert('Erro ao remover colaborador. Por favor, tente novamente.');
+                });
+        });
+    </script>
+</body>
+
+</html>

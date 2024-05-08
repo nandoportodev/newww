@@ -1,0 +1,71 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #8189d1;
+}
+
+.container-form,
+.container-input {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.container-form {
+    max-width: 600px;
+    margin-bottom: 50px;
+}
+
+.d-flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex {
+    display: flex;
+}
+
+.cadastro-colaborador {
+    justify-content: space-between;
+}
+
+.remover {
+    max-width: 600px;
+}
+
+.form-remove {
+    display: flex;
+}
+
+.container-input input {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.botao-cadastro-edicao {
+    width: 49%;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+
+
+}
+
+.btn-excluir {
+    padding: 10px;
+    background-color: red;
+    color: white;
+    max-width: 200px;
+    width: 100%;
+}
+
+.border-none {
+    margin-left: 10px;
+
+}
+
+.remover input {
+    padding: 10px;
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Projeto - Home</title>
+    <style>
+        /* Estilos para organizar os elementos */
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #8189d1;
+            
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        form input {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        button {
+            width: 49%;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        #resultado {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Listar EPIs</h1>
+    <button id="listarEPIsBtn">Listar EPIs</button>
+
+    <h1>Listar Colaboradores</h1>
+    <button id="listarColaboradoresBtn">Listar Colaboradores</button>
+
+    <div id="resultado"></div>
+
+    <h1>Area Funcional</h1>
+
+    <a href="http://localhost:3000/cadastrar_epi.html"><button>Cadastro de EPIS</button></a>
+
+    <!-- Botão para cadastro de EPIs -->
+    <a href="http://localhost:3000/cadastrar_colaborador.html"><button>Cadastro de Colaborador</button></a>
+
+    <a href="http://localhost:3000/controle_epis.html"><button>Tabela de Controle</button></a>
+
+    <a href="http://localhost:3000/editar_epi.html"><button>Editar EPI</button></a>
+
+    <a href="http://localhost:3000/editar_colaborador.html"><button>Editar Colaborador</button></a>
+
+    <script>
+        // Função para enviar requisição AJAX e exibir os EPIs cadastrados
+        function listarEPIs() {
+            fetch('/epis') // Envia uma requisição GET para a rota '/epis'
+                .then(response => response.json()) // Converte a resposta para JSON
+                .then(data => {
+                    // Limpa o conteúdo anterior
+                    document.getElementById('resultado').innerHTML = '';
+
+                    // Manipula os dados recebidos e os exibe na página
+                    const epis = data.epis;
+                    const resultadoDiv = document.getElementById('resultado');
+                    resultadoDiv.innerHTML = '<h2>EPIs Cadastrados</h2>'; // Adiciona novo título
+                    if (epis.length === 0) {
+                        resultadoDiv.innerHTML += '<p>Nenhum EPI cadastrado.</p>';
+                    } else {
+                        epis.forEach(epi => {
+                            resultadoDiv.innerHTML += `<p>ID: ${epi.id}, Nome: ${epi.nome}, Quantidade: ${epi.quantidade}, Código: ${epi.codigo}</p>`;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao listar EPIs:', error);
+                    const resultadoDiv = document.getElementById('resultado');
+                    resultadoDiv.innerHTML = '<p>Ocorreu um erro ao listar os EPIs.</p>';
+                });
+        }
+
+        // Função para enviar requisição AJAX e exibir os colaboradores cadastrados
+        function listarColaboradores() {
+            fetch('/colaboradores/listar') // Envia uma requisição GET para a rota '/colaboradores/listar'
+                .then(response => response.json()) // Converte a resposta para JSON
+                .then(data => {
+                    // Limpa o conteúdo anterior
+                    document.getElementById('resultado').innerHTML = '';
+
+                    // Manipula os dados recebidos e os exibe na página
+                    const colaboradores = data.colaboradores;
+                    const resultadoDiv = document.getElementById('resultado');
+                    resultadoDiv.innerHTML = '<h2>Colaboradores Cadastrados</h2>'; // Adiciona novo título
+                    if (colaboradores.length === 0) {
+                        resultadoDiv.innerHTML += '<p>Nenhum colaborador cadastrado.</p>';
+                    } else {
+                        colaboradores.forEach(colaborador => {
+                            resultadoDiv.innerHTML += `<p>ID: ${colaborador.id}, Nome: ${colaborador.nome}, Cargo: ${colaborador.cargo}, Setor: ${colaborador.setor}</p>`;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao listar colaboradores:', error);
+                    const resultadoDiv = document.getElementById('resultado');
+                    resultadoDiv.innerHTML = '<p>Ocorreu um erro ao listar os colaboradores.</p>';
+                });
+        }
+
+        // Adiciona um evento de clique ao botão de listar EPIs
+        document.getElementById('listarEPIsBtn').addEventListener('click', listarEPIs);
+
+        // Adiciona um evento de clique ao botão de listar colaboradores
+        document.getElementById('listarColaboradoresBtn').addEventListener('click', listarColaboradores);
+    </script>
+</body>
+
+</html>

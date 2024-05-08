@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remover EPI</title>
+</head>
+
+<body>
+    <h1>Remover EPI</h1>
+    <form id="removerEPIForm" method="POST">
+        <input type="number" name="id" placeholder="ID do EPI a ser removido">
+        <button type="submit">Remover EPI</button>
+    </form>
+    <div id="resultado"></div>
+    <script>
+        // Função para enviar requisição AJAX e remover EPI
+        document.getElementById('removerEPIForm').addEventListener('submit', event => {
+            event.preventDefault(); // Impede o envio do formulário
+            const formData = new FormData(event.target); // Obtém os dados do formulário
+            const id = formData.get('id');
+            fetch(`/epis/${id}`, { // Alteração do destino da requisição para '/epis/:id'
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); // Exibe mensagem de sucesso ou erro
+                    event.target.reset(); // Limpa os campos do formulário
+                })
+                .catch(error => {
+                    console.error('Erro ao remover EPI:', error);
+                    alert('Erro ao remover EPI. Por favor, tente novamente.');
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar EPI</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+
+<body>
+    <h1>Editar EPI</h1>
+    <div class="container-form">
+        <form id="editarEPIForm" method="PUT">
+            <div class="container-input">
+                <input type="number" name="id" placeholder="ID do EPI">
+                <input type="text" name="nome" placeholder="Novo Nome do EPI">
+                <input type="number" name="quantidade" placeholder="Nova Quantidade">
+                <input type="text" name="codigo" placeholder="Novo Código">
+                <div class="flex cadastro-colaborador">
+                    <button class="botao-cadastro-edicao border-none" type="submit">EDITAR EPI</button>
+                </div>
+            </div>
+    </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('editarEPIForm');
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(form);
+                const jsonData = {};
+                formData.forEach((value, key) => {
+                    jsonData[key] = value;
+                });
+                const { id, nome, quantidade, codigo } = jsonData;
+                try {
+                    const response = await fetch(`/epis/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ nome, quantidade, codigo })
+                    });
+                    const data = await response.json();
+                    alert(data.message);
+                    // Redirecionar ou atualizar a página após a edição
+                } catch (error) {
+                    console.error('Erro ao editar EPI:', error);
+                    alert('Erro ao editar EPI. Por favor, tente novamente.');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

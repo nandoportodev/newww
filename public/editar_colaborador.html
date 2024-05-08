@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Colaborador</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+
+<body>
+    <h1>Editar Colaborador</h1>
+    <div class="container-form">
+        <form id="editarColaboradorForm" method="PUT">
+            <div class="container-input">
+                <input type="number" name="id" placeholder="ID do Colaborador">
+                <input type="text" name="nome" placeholder="Novo Nome do Colaborador">
+                <input type="text" name="cargo" placeholder="Novo Cargo">
+                <input type="text" name="setor" placeholder="Novo Setor">
+                <div class="flex cadastro-colaborador">
+                    <button class="botao-cadastro-edicao border-none" type="submit">EDITAR COLABORADOR</button>
+                </div>
+            </div>
+    </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('editarColaboradorForm');
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(form);
+                const jsonData = {};
+                formData.forEach((value, key) => {
+                    jsonData[key] = value;
+                });
+                const { id, nome, cargo, setor } = jsonData;
+                try {
+                    const response = await fetch(`/colaboradores/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ nome, cargo, setor })
+                    });
+                    const data = await response.json();
+                    alert(data.message);
+                    // Redirecionar ou atualizar a página após a edição
+                } catch (error) {
+                    console.error('Erro ao editar Colaborador:', error);
+                    alert('Erro ao editar Colaborador. Por favor, tente novamente.');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
