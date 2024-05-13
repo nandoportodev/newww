@@ -1,4 +1,4 @@
-// controllers/episController.js
+
 const database = require('../database');
 
 exports.obterEPI = async (req, res) => {

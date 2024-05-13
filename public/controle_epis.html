@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de EPIs</title>
     <link rel="stylesheet" href="estilo.css">
+    <style>
+        .retirada {
+            color: green;
+            background-color: black;
+        }
+
+        .devolucao {
+            color: red;
+            background-color: black;
+        }
+    </style>
 </head>
 
 <body>
@@ -118,7 +129,7 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.status); // Exibe mensagem de sucesso ou erro
+                    
                     event.target.reset(); // Limpa os campos do formulário
                 })
                 .catch(error => {
